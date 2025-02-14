@@ -1,5 +1,6 @@
 package sistemavendas.estoque;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -14,15 +15,11 @@ public class ComprarProduto {
             System.out.println("Erro: Apenas usuários podem realizar compras.");
             return;
         }
-
+        int escolha;
         while (true) {
-            System.out.println("===== MENU DE COMPRAS =====");
-            System.out.println("1. Visualizar Estoque");
-            System.out.println("2. Comprar Produto");
-            System.out.println("3. Voltar ao Menu Principal");
-            System.out.print("Escolha uma opção: ");
-
-            int escolha = validarEntradaNumero(scanner);
+            String[] options = {"Visualizar Estoque","Comprar Produto","Voltar ao Menu Principal"};
+            escolha = JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu de Compras",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
             switch (escolha) {
                 case 1 -> visualizarEstoque();
