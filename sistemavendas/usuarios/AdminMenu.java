@@ -17,8 +17,8 @@ public class AdminMenu {
                 case 0 -> estoqueService.gerenciarEstoque(scanner);
                 case 1 -> estoqueService.exibirEstoque();
                 case 2 -> usuarioService.listarUsuarios();
-                case 3 -> usuarioService.promoverUsuario(scanner);  // Apenas admin pode promover
-                case 4 -> usuarioService.alterarUsuarioESenha(scanner, usuarioAtual);
+                case 3 -> usuarioService.promoverUsuario();  // Apenas admin pode promover
+                case 4 -> usuarioService.alterarUsuarioESenha(usuarioAtual);
                 case 5 -> {
 
                     JOptionPane.showMessageDialog(null, "Login Realizado.");
@@ -29,12 +29,15 @@ public class AdminMenu {
                 default -> JOptionPane.showMessageDialog(null, "Opção Inválida!");
             }
 
-            // Opção para retornar ao menu anterior
-            System.out.println("\nPressione 0 para voltar ao menu anterior.");
-            int voltar = usuarioService.validarEntradaNumero(scanner);
-            if (voltar == 0) {
-                break; // Retorna ao menu principal de opções do administrador
-            }
+            String[] options2 = {"Voltar"};
+            escolha = JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu Administrador",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options2, options2[0]);
+
+            switch (escolha) {
+                case 0 -> {
+                return;
+                }
+            };
         }
     }
 }

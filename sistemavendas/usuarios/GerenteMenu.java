@@ -5,8 +5,7 @@ import javax.swing.*;
 import sistemavendas.gerir.*;
 
 public class GerenteMenu {
-    public static void gerenteMenu (UsuarioService usuarioService, sistemavendas.estoque.EstoqueService estoqueService, Scanner scanner, String usuarioAtual)
-    {
+    public static void gerenteMenu(UsuarioService usuarioService, sistemavendas.estoque.EstoqueService estoqueService, Scanner scanner, String usuarioAtual) {
         // Gerente não tem a opção de promover usuários
         int escolha;
         while (true) {
@@ -17,7 +16,7 @@ public class GerenteMenu {
             switch (escolha) {
                 case 0 -> estoqueService.gerenciarEstoque(scanner);
                 case 1 -> estoqueService.exibirEstoque();
-                case 2 -> usuarioService.alterarUsuarioESenha(scanner, usuarioAtual);
+                case 2 -> usuarioService.alterarUsuarioESenha(usuarioAtual);
                 case 3 -> {
 
                     System.out.println("Logout realizado.");
@@ -29,10 +28,14 @@ public class GerenteMenu {
             }
 
             // Opção para retornar ao menu anterior
-            System.out.println("\nPressione 0 para voltar ao menu anterior.");
-            int voltar = usuarioService.validarEntradaNumero(scanner);
-            if (voltar == 0) {
-                break; // Retorna ao menu principal de opções do gerente
+            String[] options2 = {"Voltar"};
+            escolha = JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu Gerente",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options2, options2[0]);
+
+            switch (escolha) {
+                case 0 -> {
+                    return;
+                }
             }
         }
     }

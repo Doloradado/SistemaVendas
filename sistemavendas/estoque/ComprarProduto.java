@@ -60,11 +60,10 @@ public class ComprarProduto {
         boolean produtoEncontrado = false;
 
         System.out.println("===== COMPRA DE PRODUTO =====");
-        System.out.print("Nome do produto que deseja comprar: ");
-        String nomeProduto = scanner.next();
-        System.out.print("Quantidade desejada: ");
-        int quantidadeCompra = validarEntradaNumero(scanner);
+        String nomeProduto = JOptionPane.showInputDialog("Digite seu nome: ");
+        String quantidade = JOptionPane.showInputDialog("Digite sua senha: ");
 
+        int quantidadeCompra = Integer.parseInt(quantidade);
         if (quantidadeCompra <= 0) {
             System.out.println("Erro: A quantidade deve ser maior que zero.");
             return;
