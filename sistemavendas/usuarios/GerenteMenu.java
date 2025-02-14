@@ -13,7 +13,6 @@ public class GerenteMenu {
             String[] options = {"Gerenciar Estoque", "Visualizar Estoque", "Alterar Meu Usuário/Senha", "Logout"};
             escolha = JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu Gerente",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-            escolha = usuarioService.validarEntradaNumero(scanner);
 
             switch (escolha) {
                 case 0 -> estoqueService.gerenciarEstoque(scanner);

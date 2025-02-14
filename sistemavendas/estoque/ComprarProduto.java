@@ -22,9 +22,9 @@ public class ComprarProduto {
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
             switch (escolha) {
-                case 1 -> visualizarEstoque();
-                case 2 -> comprarProduto(scanner, usuario);
-                case 3 -> {
+                case 0 -> visualizarEstoque();
+                case 1 -> comprarProduto(scanner, usuario);
+                case 2 -> {
                     return;
                 }
                 default -> {
