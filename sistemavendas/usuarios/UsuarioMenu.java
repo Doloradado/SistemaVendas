@@ -16,11 +16,14 @@ public class UsuarioMenu {
                 usuarioLogado = false;
                 usuarioAtual = null;
                 tipoUsuario = null;
-                System.out.println("Logout realizado.");
+                JOptionPane.showMessageDialog(null, "Logout realizado.");
                 // Transferir o conteúdo de estoque_temp.txt para estoque.txt ao sair
                 SistemaVendas.atualizarEstoque();
+                return;
             }
-            default -> System.out.println("Opção inválida.");
+            default -> {
+                return;
+            }
         }
 
     }

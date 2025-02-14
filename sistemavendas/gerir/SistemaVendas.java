@@ -32,7 +32,7 @@ public class SistemaVendas {
                 switch (escolha) {
                     case 0 -> usuarioService.registrarUsuario(scanner);
                     case 1 -> {
-                        String[] loginInfo = usuarioService.login(scanner);
+                        String[] loginInfo = usuarioService.login();
                         if (loginInfo != null) {
                             usuarioLogado = true;
                             usuarioAtual = loginInfo[0];

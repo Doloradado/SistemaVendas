@@ -1,26 +1,27 @@
 package sistemavendas.usuarios;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import sistemavendas.gerir.*;
 
+import javax.swing.*;
+
 public class UsuarioService {
     private static final String USERS_FILE = "data/usuarios.txt";
 
-    public String[] login(Scanner scanner) {
-        System.out.print("Usuário: ");
-        String usuario = scanner.nextLine();
-        System.out.print("Senha: ");
-        String senha = scanner.nextLine();
+    public String[] login() {
+        String usuario = JOptionPane.showInputDialog("Digite seu usuário: ");
+        String senha = JOptionPane.showInputDialog("Digite sua senha: ");
         
         String tipoUsuario = autenticarUsuario(usuario, senha);
         if (tipoUsuario != null) {
-            System.out.println("Login bem-sucedido como " + tipoUsuario);
+            JOptionPane.showMessageDialog(null,"Login bem-sucedido como " + tipoUsuario);
             return new String[]{usuario, tipoUsuario};
         } else {
-            System.out.println("Usuário ou senha incorretos.");
+            JOptionPane.showMessageDialog(null,"Usuário ou senha incorretos.");
             return null;
         }
     }
@@ -36,38 +37,35 @@ public class UsuarioService {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Erro ao ler arquivo de usuários.");
+            JOptionPane.showMessageDialog(null,"Erro ao ler arquivo de usuários.");
         }
         return null;
     }
 
     public void registrarUsuario(Scanner scanner) {
-        System.out.print("Novo usuário: ");
-        String usuario = scanner.nextLine().trim();
+        String usuario = JOptionPane.showInputDialog("Novo usuário: ");
         try {
             Tratador.validarNome(usuario);
         } catch (IllegalArgumentException ex) {
-            System.out.println("Erro: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null,"Erro: " + ex.getMessage());
             return;
         }
         if (verificarUsuarioExistente(usuario)) {
-            System.out.println("Erro: Usuário já existe!");
+            JOptionPane.showMessageDialog(null,"Erro: usuário já existe!");
             return;
         }
-        
-        System.out.print("Senha: ");
-        String senha = scanner.nextLine().trim();
+        String senha = JOptionPane.showInputDialog("Digite sua senha: ");
         try {
             Tratador.validarSenha(senha);
         } catch (IllegalArgumentException ex){
-            System.out.println("Erro: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null,"Erro: " + ex.getMessage());
             return;
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(USERS_FILE, true))) {
             writer.write(usuario + "," + senha + ",usuario\n");
-            System.out.println("Usuário registrado com sucesso!");
+            JOptionPane.showMessageDialog(null,"Usuário registrado com sucesso!");
         } catch (IOException e) {
-            System.out.println("Erro ao registrar usuário.");
+            JOptionPane.showMessageDialog(null,"Erro ao registrar usuário.");
         }
     }
 
@@ -81,14 +79,14 @@ public class UsuarioService {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Erro ao verificar usuário existente.");
+            JOptionPane.showMessageDialog(null,"Erro ao verificar usuário existente.");
         }
         return false;
     }
 
     public int validarEntradaNumero(Scanner scanner) {
         while (!scanner.hasNextInt()) {
-            System.out.println("Entrada inválida, digite um número.");
+            JOptionPane.showMessageDialog(null,"Entrada inválida, digite um número.");
             scanner.next();
         }
         int numero = scanner.nextInt();
@@ -108,9 +106,9 @@ public class UsuarioService {
                 // Cria o diretório e o arquivo se não existirem
                 arquivoUsuarios.getParentFile().mkdirs();
                 arquivoUsuarios.createNewFile();
-                System.out.println("Arquivo de usuários criado.");
+                JOptionPane.showMessageDialog(null,"Arquivo de usuários criado.");
             } catch (IOException e) {
-                System.out.println("Erro ao criar o arquivo de usuários.");
+                JOptionPane.showMessageDialog(null,"Erro ao criar o arquivo de usuários.");
                 return;
             }
         }
@@ -138,13 +136,13 @@ public class UsuarioService {
             // Se o administrador não existir, cria um novo
             if (!adminExiste) {
                 writer.write(nome + "," + senha + "," + tipoUsuario + "\n");
-                System.out.println("Administrador criado com sucesso!");
+                JOptionPane.showMessageDialog(null,"Administrador criado com sucesso!");
             } else {
-                System.out.println("Administrador já existe no sistema.");
+                JOptionPane.showMessageDialog(null,"Administrador já existe no sistema.");
             }
 
         } catch (IOException e) {
-            System.out.println("Erro ao criar ou adicionar administrador.");
+            JOptionPane.showMessageDialog(null,"Erro ao criar ou adicionar administrador.");
         }
     }
     private static final String USER_FILE = "data/usuarios.txt";
@@ -155,23 +153,25 @@ public class UsuarioService {
         if (arquivoUsuarios.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(arquivoUsuarios))) {
                 String linha;
-                System.out.println("Lista de Usuários:");
+                StringBuilder sb = new StringBuilder();
+                sb.append("Lista de usuários: ").append("\n\n");
                 while ((linha = reader.readLine()) != null) {
                     String[] dados = linha.split(",");
-                    System.out.println("Nome: " + dados[0] + ", Tipo: " + dados[2]);
+                    sb.append("Nome: ").append(dados[0]).append("\n")
+                            .append("Tipo: ").append(dados[2]).append("\n\n");
                 }
+                JOptionPane.showMessageDialog(null, sb.toString(), "Lista de Usuários", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
-                System.out.println("Erro ao listar usuários.");
+                JOptionPane.showMessageDialog(null,"Erro ao listar usuários.");
             }
         } else {
-            System.out.println("Nenhum usuário encontrado.");
+            JOptionPane.showMessageDialog(null,"Nenhum usuário encontrado.");
         }
     }
 
     // Método para promover um usuário a gerente
-    public void promoverUsuario(Scanner scanner) {
-        System.out.println("Digite o nome do usuário a ser promovido a gerente:");
-        String nomeUsuario = scanner.nextLine();
+    public void promoverUsuario() {
+        String nomeUsuario = JOptionPane.showInputDialog("Digite o nome do usuário a ser promovido a gerente:");
 
         File arquivoUsuarios = new File(USER_FILE);
         if (arquivoUsuarios.exists()) {
@@ -194,21 +194,21 @@ public class UsuarioService {
                         for (String usuario : usuarios) {
                             writer.write(usuario + "\n");
                         }
-                        System.out.println("Usuário promovido a gerente com sucesso!");
+                        JOptionPane.showMessageDialog(null,"Usuário promovido a gerente com sucesso!");
                     }
                 } else {
-                    System.out.println("Usuário não encontrado ou já é gerente.");
+                    JOptionPane.showMessageDialog(null,"Usuário não encontrado ou já é gerente.");
                 }
             } catch (IOException e) {
-                System.out.println("Erro ao promover usuário.");
+                JOptionPane.showMessageDialog(null,"Erro ao promover usuário.");
             }
         } else {
-            System.out.println("Arquivo de usuários não encontrado.");
+            JOptionPane.showMessageDialog(null,"Arquivo de usuários não encontrado.");
         }
     }
 
     // Método para alterar o nome de usuário e a senha
-    public void alterarUsuarioESenha(Scanner scanner, String usuarioAtual) {
+    public void alterarUsuarioESenha(String usuarioAtual) {
         File arquivoUsuarios = new File(USER_FILE);
         if (arquivoUsuarios.exists()) {
             List<String> usuarios = new ArrayList<>();
@@ -220,22 +220,19 @@ public class UsuarioService {
                     String[] dados = linha.split(",");
                     if (dados[0].equals(usuarioAtual)) {
                         // Alterar nome de usuário
-                        System.out.println("Digite o novo nome de usuário:");
-                        String novoNome = scanner.nextLine();
+                        String novoNome = JOptionPane.showInputDialog("Digite o novo nome de usuário:");
                         dados[0] = novoNome;
 
                         // Alterar senha
-                        System.out.println("Digite a nova senha:");
-                        String novaSenha = scanner.nextLine();
-                        System.out.println("Digite novamente a nova senha:");
-                        String confirmarSenha = scanner.nextLine();
+                        String novaSenha = JOptionPane.showInputDialog("Digite a nova senha:");
+                        String confirmarSenha = JOptionPane.showInputDialog("Digite novamente a nova senha:");;
 
                         if (novaSenha.equals(confirmarSenha)) {
                             dados[1] = novaSenha; // Atualizando a senha
                             usuarioAlterado = true;
-                            System.out.println("Usuário e senha alterados com sucesso!");
+                            JOptionPane.showMessageDialog(null,"Usuário e senha alterados com sucesso!");
                         } else {
-                            System.out.println("As senhas não coincidem. A alteração foi cancelada.");
+                            JOptionPane.showMessageDialog(null,"As senhas não coincidem. A alteração foi cancelada.");
                         }
                     }
                     usuarios.add(String.join(",", dados));
@@ -248,13 +245,13 @@ public class UsuarioService {
                         }
                     }
                 } else {
-                    System.out.println("Usuário não encontrado.");
+                    JOptionPane.showMessageDialog(null,"Usuário não encontrado.");
                 }
             } catch (IOException e) {
-                System.out.println("Erro ao alterar usuário e senha.");
+                JOptionPane.showMessageDialog(null,"Erro ao alterar usuário e senha.");
             }
         } else {
-            System.out.println("Arquivo de usuários não encontrado.");
+            JOptionPane.showMessageDialog(null,"Arquivo de usuários não encontrado.");
         }
     }
     }
