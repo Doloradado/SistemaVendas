@@ -42,15 +42,15 @@ public class ComprarProduto {
             while ((linha = reader.readLine()) != null) {
                 String[] partes = linha.split(",");
                 if (partes.length == 5) {
-                    System.out.println("Produto: " + partes[0] + " | Quantidade: " + partes[1] + " | Preço: R$" + partes[2] + " | Categoria: " + partes[3] + " | Marca: " + partes[4]);
+                    JOptionPane.showMessageDialog(null, "Produto: " + partes[0] + " | Quantidade: " + partes[1] + " | Preço: R$" + partes[2] + " | Categoria: " + partes[3] + " | Marca: " + partes[4]);
                     estoqueVazio = false;
                 }
             }
             if (estoqueVazio) {
-                System.out.println("O estoque está vazio.");
+                JOptionPane.showMessageDialog(null, "O estoque está vazio.");
             }
         } catch (IOException e) {
-            System.out.println("Erro ao acessar o estoque: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao acessar o estoque: " + e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class ComprarProduto {
 
         int quantidadeCompra = Integer.parseInt(quantidade);
         if (quantidadeCompra <= 0) {
-            System.out.println("Erro: A quantidade deve ser maior que zero.");
+            JOptionPane.showMessageDialog(null, "Erro: A quantidade deve ser maior que zero.");
             return;
         }
 
@@ -81,7 +81,7 @@ public class ComprarProduto {
                 if (nomeProduto.equalsIgnoreCase(nomeProduto)) {
                     produtoEncontrado = true;
                     if (quantidadeCompra > quantidadeDisponivel) {
-                        System.out.println("Erro: Estoque insuficiente. Apenas " + quantidadeDisponivel + " disponíveis.");
+                        JOptionPane.showMessageDialog(null, "Erro: Estoque insuficiente. Apenas " + quantidadeDisponivel + " disponíveis.");
                         return;
                     }
                     int novaQuantidade = quantidadeDisponivel - quantidadeCompra;
@@ -90,19 +90,19 @@ public class ComprarProduto {
                     registrarCompra(usuario, nomeProduto, quantidadeCompra, preco * quantidadeCompra);
 
                     if (novaQuantidade <= 5) {
-                        System.out.println("ALERTA: Estoque de " + nomeProduto + " está quase no fim! Restam apenas " + novaQuantidade + " unidades.");
+                        JOptionPane.showMessageDialog(null, "ALERTA: Estoque de " + nomeProduto + " está quase no fim! Restam apenas " + novaQuantidade + " unidades.");
                     }
                 } else {
                     linhasEstoque.add(linha);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Erro ao acessar o estoque: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao acessar o estoque: " + e.getMessage());
             return;
         }
 
         if (!produtoEncontrado) {
-            System.out.println("Erro: Produto não encontrado no estoque.");
+            JOptionPane.showMessageDialog(null, "Erro: Produto não encontrado no estoque.");
             return;
         }
 
@@ -112,9 +112,9 @@ public class ComprarProduto {
                 writer.write(linha);
                 writer.newLine();
             }
-            System.out.println("Compra realizada com sucesso!");
+            JOptionPane.showMessageDialog(null, "Compra realizada com sucesso!");
         } catch (IOException e) {
-            System.out.println("Erro ao atualizar o estoque: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar o estoque: " + e.getMessage());
         }
 
         // Registra o total da compra no histórico de compras
@@ -130,12 +130,12 @@ public class ComprarProduto {
                 }
                 // Copia o conteúdo do estoque_temp.txt para estoque.txt
                 Files.copy(estoqueTemp.toPath(), estoqueOriginal.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("Estoque atualizado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Estoque atualizado com sucesso!");
             } catch (IOException e) {
-                System.out.println("Erro ao atualizar o estoque: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Erro ao atualizar o estoque: " + e.getMessage());
             }
         } else {
-            System.out.println("Erro: O arquivo estoque_temp.txt não existe.");
+            JOptionPane.showMessageDialog(null, "Erro: O arquivo estoque_temp.txt não existe.");
         }
     }
 
@@ -143,9 +143,9 @@ public class ComprarProduto {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_HISTORICO_COMPRAS, true))) {
             writer.write(usuario + "," + produto + "," + quantidade + "," + total);
             writer.newLine();
-            System.out.println("Compra registrada no histórico.");
+            JOptionPane.showMessageDialog(null, "Compra registrada no histórico.");
         } catch (IOException e) {
-            System.out.println("Erro ao registrar compra: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao registrar compra: " + e.getMessage());
         }
     }
 
@@ -153,15 +153,15 @@ public class ComprarProduto {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_HISTORICO_COMPRAS, true))) {
             writer.write("Total da compra de " + usuario + ": R$" + totalCompra);
             writer.newLine();
-            System.out.println("Total da compra registrado no histórico.");
+            JOptionPane.showMessageDialog(null, "Total da compra registrado no histórico.");
         } catch (IOException e) {
-            System.out.println("Erro ao registrar total da compra: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao registrar total da compra: " + e.getMessage());
         }
     }
 
     private int validarEntradaNumero(Scanner scanner) {
         while (!scanner.hasNextInt()) {
-            System.out.println("Entrada inválida. Digite um número válido.");
+            JOptionPane.showMessageDialog(null, "Entrada inválida. Digite um número válido.");
             scanner.next();
         }
         return scanner.nextInt();

@@ -16,9 +16,9 @@ public class GerenciarEstoque {
             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
             switch (escolha) {
-                case 0 -> adicionarProduto(scanner);
-                case 1 -> removerProduto(scanner);
-                case 2 -> modificarPreco(scanner);
+                case 0 -> adicionarProduto();
+                case 1 -> removerProduto();
+                case 2 -> modificarPreco();
                 case 3 -> {
                     return;
                 }
@@ -29,18 +29,13 @@ public class GerenciarEstoque {
         }
     }
 
-    private void adicionarProduto(Scanner scanner) {
-        
-        System.out.print("Nome do produto: ");
-        String nome = scanner.next().trim();
-        System.out.print("Quantidade: ");
-        String quantidadeStr = scanner.next().trim();
-        System.out.print("Preço: ");
-        String precoStr = scanner.next().trim();
-        System.out.print("Categoria: ");
-        String categoria = scanner.next().trim();
-        System.out.print("Marca: ");
-        String marca = scanner.next().trim();
+    private void adicionarProduto() {
+
+        String nome = JOptionPane.showInputDialog("Nome do produto: ");
+        String quantidadeStr = JOptionPane.showInputDialog("Quantidade: ");
+        String precoStr = JOptionPane.showInputDialog("Preço: ");
+        String categoria = JOptionPane.showInputDialog("Categoria: ");
+        String marca = JOptionPane.showInputDialog("Marca: ");
 
         try {
             Tratador.validarNomeProduto(nome);
@@ -49,14 +44,14 @@ public class GerenciarEstoque {
             Tratador.validarCategoria(categoria);
             Tratador.validarMarca(marca);
          } catch (IllegalArgumentException ex){
-               System.out.println("Erro: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
                return;
         }
             int quantidade = Integer.parseInt(quantidadeStr);
             double preco = Double.parseDouble(precoStr);
 
         if (quantidade <= 0 || preco <= 0) {
-            System.out.println("Erro: Quantidade e preço devem ser maiores que zero.");
+            JOptionPane.showMessageDialog(null, "Erro: Quantidade e preço devem ser maiores que zero.");
             return;
         }
 
@@ -64,18 +59,17 @@ public class GerenciarEstoque {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CAMINHO_ESTOQUE, true))) {
             writer.write(nome + "," + quantidade + "," + preco + "," + categoria + "," + marca );
             writer.newLine();
-            System.out.println("Produto adicionado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Produto adicionado com sucesso!");
         } catch (IOException e) {
-            System.out.println("Erro ao salvar o produto: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao salvar o produto: " + e.getMessage());
         }
     }
 
-    private void removerProduto(Scanner scanner) {
+    private void removerProduto() {
         List<String> linhas = new ArrayList<>();
         boolean encontrado = false;
 
-        System.out.print("Nome do produto a remover: ");
-        String nomeProduto = scanner.next();
+        String nomeProduto = JOptionPane.showInputDialog("Nome do produto a remover: ");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_ESTOQUE))) {
             String linha;
@@ -88,12 +82,12 @@ public class GerenciarEstoque {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Erro ao ler o estoque: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao ler o estoque: " + e.getMessage());
             return;
         }
 
         if (!encontrado) {
-            System.out.println("Produto não encontrado.");
+            JOptionPane.showMessageDialog(null, "Produto não encontrado.");
             return;
         }
 
@@ -105,9 +99,9 @@ public class GerenciarEstoque {
                 writer.write(linha);
                 writer.newLine();
             }
-            System.out.println("Produto removido com sucesso!");
+            JOptionPane.showMessageDialog(null, "Produto removido com sucesso!");
         } catch (IOException e) {
-            System.out.println("Erro ao escrever no arquivo temporário: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao escrever no arquivo temporário: " + e.getMessage());
             return;
         }
 
@@ -115,32 +109,31 @@ public class GerenciarEstoque {
         File arquivoOriginal = new File(CAMINHO_ESTOQUE);
         if (arquivoOriginal.exists()) {
             if (arquivoOriginal.delete()) {
-                System.out.println("Arquivo original removido com sucesso.");
+                JOptionPane.showMessageDialog(null, "Arquivo original removido com sucesso.");
             } else {
-                System.out.println("Erro ao remover o arquivo original.");
+                JOptionPane.showMessageDialog(null, "Erro ao remover o arquivo original.");
                 return;
             }
         }
 
         // Renomear o arquivo temporário para o nome do arquivo original
         if (arquivoTemp.renameTo(arquivoOriginal)) {
-            System.out.println("Estoque atualizado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Estoque atualizado com sucesso!");
         } else {
-            System.out.println("Erro ao renomear o arquivo temporário.");
+            JOptionPane.showMessageDialog(null, "Erro ao renomear o arquivo temporário.");
         }
     }
 
-    private void modificarPreco(Scanner scanner) {
+    private void modificarPreco() {
         List<String> linhas = new ArrayList<>();
         boolean encontrado = false;
 
-        System.out.print("Nome do produto a modificar: ");
-        String nomeProduto = scanner.next();
-        System.out.print("Novo preço: ");
-        double novoPreco = validarEntradaDouble(scanner);
+        String nomeProduto = JOptionPane.showInputDialog("Nome do produto a modificar: ");
+        String Preco = JOptionPane.showInputDialog("Novo preço: ");
+        double novoPreco = Double.parseDouble(Preco);
 
         if (novoPreco <= 0) {
-            System.out.println("Erro: O preço deve ser maior que zero.");
+            JOptionPane.showMessageDialog(null, "Erro: O preço deve ser maior que zero.");
             return;
         }
 
@@ -156,12 +149,12 @@ public class GerenciarEstoque {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Erro ao ler o estoque: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao ler o estoque: " + e.getMessage());
             return;
         }
 
         if (!encontrado) {
-            System.out.println("Produto não encontrado.");
+            JOptionPane.showMessageDialog(null, "Produto não encontrado.");
             return;
         }
 
@@ -173,9 +166,9 @@ public class GerenciarEstoque {
                 writer.write(linha);
                 writer.newLine();
             }
-            System.out.println("Preço atualizado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Preço atualizado com sucesso!");
         } catch (IOException e) {
-            System.out.println("Erro ao escrever no arquivo temporário: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao escrever no arquivo temporário: " + e.getMessage());
             return;
         }
 
@@ -183,24 +176,24 @@ public class GerenciarEstoque {
         File arquivoOriginal = new File(CAMINHO_ESTOQUE);
         if (arquivoOriginal.exists()) {
             if (arquivoOriginal.delete()) {
-                System.out.println("Arquivo original removido com sucesso.");
+                JOptionPane.showMessageDialog(null, "Arquivo original removido com sucesso.");
             } else {
-                System.out.println("Erro ao remover o arquivo original.");
+                JOptionPane.showMessageDialog(null, "Erro ao remover o arquivo original.");
                 return;
             }
         }
 
         // Renomear o arquivo temporário para o nome do arquivo original
         if (arquivoTemp.renameTo(arquivoOriginal)) {
-            System.out.println("Estoque atualizado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Estoque atualizado com sucesso!");
         } else {
-            System.out.println("Erro ao renomear o arquivo temporário.");
+            JOptionPane.showMessageDialog(null, "Erro ao renomear o arquivo temporário.");
         }
     }
 
     private int validarEntradaNumero(Scanner scanner) {
         while (!scanner.hasNextInt()) {
-            System.out.println("Entrada inválida. Digite um número válido.");
+            JOptionPane.showMessageDialog(null, "Entrada inválida. Digite um número válido.");
             scanner.next();
         }
         return scanner.nextInt();
@@ -208,7 +201,7 @@ public class GerenciarEstoque {
 
     private double validarEntradaDouble(Scanner scanner) {
         while (!scanner.hasNextDouble()) {
-            System.out.println("Entrada inválida. Digite um valor numérico válido.");
+            JOptionPane.showMessageDialog(null, "Entrada inválida. Digite um valor numérico válido.");
             scanner.next();
         }
         return scanner.nextDouble();
