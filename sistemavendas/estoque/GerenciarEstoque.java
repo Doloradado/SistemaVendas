@@ -30,6 +30,7 @@ public class GerenciarEstoque {
     }
 
     private void adicionarProduto(Scanner scanner) {
+        
         System.out.print("Nome do produto: ");
         String nome = scanner.next().trim();
         System.out.print("Quantidade: ");
