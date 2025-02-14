@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 import sistemavendas.gerir.*;
 
+import javax.swing.*;
+
 public class EstoqueService {
     private static final String STOCK_FILE = "data/estoque.txt";
 
@@ -25,6 +27,14 @@ public class EstoqueService {
                     if (quantidade <= 5) {
                         System.out.println("ALERTA: O estoque do produto " + partes[0] + " está quase no fim!");
                     }
+
+                    sb.append("Lista de usuários: ").append("\n\n");
+                    while ((linha = reader.readLine()) != null) {
+                        String[] dados = linha.split(",");
+                        sb.append("Nome: ").append(dados[0]).append("\n")
+                                .append("Tipo: ").append(dados[2]).append("\n\n");
+                    }
+                    JOptionPane.showMessageDialog(null, sb.toString(), "Lista de Usuários", JOptionPane.INFORMATION_MESSAGE);
     
                     // Exibe os dados do produto de forma formatada
                     System.out.println("Produto: " + partes[0] + " | Quantidade: " + partes[1] + " | Preço: R$" + String.format("%.2f", preco) + " |Categoria:" + partes[3] + " |Marca: " + partes[4]);
@@ -56,7 +66,9 @@ public class EstoqueService {
             case 1 -> adicionarProduto(scanner);
             case 2 -> removerProduto(scanner);
             case 3 -> editarProduto(scanner);
-            default -> System.out.println("Opção inválida.");
+            default -> {
+                return;
+            }
         }
     }
 
@@ -93,9 +105,9 @@ public class EstoqueService {
         // Adiciona o produto ao arquivo
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(STOCK_FILE, true))) {
             writer.write(nome + "," + quantidade + "," + preco + "," + categoria + "," + marca + "\n");
-            System.out.println("Produto adicionado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Produto adicionado com sucesso!");
         } catch (IOException e) {
-            System.out.println("Erro ao adicionar produto.");
+            JOptionPane.showMessageDialog(null, "Erro ao adicionar produto.");
         }
     }
 
@@ -123,15 +135,15 @@ public class EstoqueService {
             }
 
             if (!produtoEncontrado) {
-                System.out.println("Produto não encontrado.");
+                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
             } else {
                 arquivo.delete();
                 tempFile.renameTo(arquivo);
-                System.out.println("Produto removido com sucesso!");
+                JOptionPane.showMessageDialog(null, "Produto removido com sucesso!");
             }
 
         } catch (IOException e) {
-            System.out.println("Erro ao remover produto.");
+            JOptionPane.showMessageDialog(null, "Erro ao remover produto.");
         }
     }
 
@@ -171,15 +183,15 @@ public class EstoqueService {
             }
 
             if (!produtoEncontrado) {
-                System.out.println("Produto não encontrado.");
+                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
             } else {
                 arquivo.delete();
                 tempFile.renameTo(arquivo);
-                System.out.println("Produto editado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Produto editado com sucesso!");
             }
 
         } catch (IOException e) {
-            System.out.println("Erro ao editar produto.");
+            JOptionPane.showMessageDialog(null, "Erro ao editar produto.");
         }
     }
 }
