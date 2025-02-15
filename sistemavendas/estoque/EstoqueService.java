@@ -10,11 +10,13 @@ public class EstoqueService {
     private static final String STOCK_FILE = "data/estoque.txt";
 
     public void exibirEstoque() {
-        System.out.println("\n===== ESTOQUE DISPONÍVEL =====");
         
         try (BufferedReader reader = new BufferedReader(new FileReader(STOCK_FILE))) {
             String linha;
             boolean estoqueVazio = true;
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Estoque: ").append("\n\n");
     
             while ((linha = reader.readLine()) != null) {
                 String[] partes = linha.split(",");
@@ -28,44 +30,39 @@ public class EstoqueService {
                         System.out.println("ALERTA: O estoque do produto " + partes[0] + " está quase no fim!");
                     }
 
-                    sb.append("Lista de usuários: ").append("\n\n");
-                    while ((linha = reader.readLine()) != null) {
-                        String[] dados = linha.split(",");
-                        sb.append("Nome: ").append(dados[0]).append("\n")
-                                .append("Tipo: ").append(dados[2]).append("\n\n");
-                    }
-                    JOptionPane.showMessageDialog(null, sb.toString(), "Lista de Usuários", JOptionPane.INFORMATION_MESSAGE);
-    
+                        sb.append("Produto:: ").append(partes[0]).append("\n")
+                                .append("Quantidade: ").append(partes[1]).append("\n")
+                                .append("Preço: R$ ").append(String.format("%.2f", preco)).append("\n")
+                                .append("Categoria: ").append(partes[3]).append("\n")
+                                .append("Marca: : ").append(partes[4]).append("\n\n");
+
                     // Exibe os dados do produto de forma formatada
-                    System.out.println("Produto: " + partes[0] + " | Quantidade: " + partes[1] + " | Preço: R$" + String.format("%.2f", preco) + " |Categoria:" + partes[3] + " |Marca: " + partes[4]);
                     estoqueVazio = false;
                 }
             }
+            JOptionPane.showMessageDialog(null, sb.toString(), "Lista de Estoque", JOptionPane.INFORMATION_MESSAGE);
     
             if (estoqueVazio) {
-                System.out.println("O estoque está vazio.");
+                JOptionPane.showMessageDialog(null, "O estoque está vazio.");
             }
         } catch (IOException e) {
-            System.out.println("Erro ao exibir estoque.");
+            JOptionPane.showMessageDialog(null, "Erro ao exibir estoque.");
         }
     }
     
 
     // Método para gerenciar o estoque (adicionar, remover, editar produtos)
     public void gerenciarEstoque(Scanner scanner) {
-        System.out.println("Gerenciar Estoque:");
-        System.out.println("1. Adicionar Produto");
-        System.out.println("2. Remover Produto");
-        System.out.println("3. Editar Produto");
-        System.out.println("Escolha uma opção:");
-
-        int escolha = scanner.nextInt();
-        scanner.nextLine(); // Limpa o buffer de entrada
+        int escolha;
+        JOptionPane.showMessageDialog(null, "Gerenciador de Estoque");
+        String[] options = {"Adicionar Produto", "Remover Produto","Editar Produto","Sair"};
+        escolha = JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Gerenciador de Estoque",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
         switch (escolha) {
-            case 1 -> adicionarProduto(scanner);
-            case 2 -> removerProduto(scanner);
-            case 3 -> editarProduto(scanner);
+            case 0 -> adicionarProduto(scanner);
+            case 1 -> removerProduto(scanner);
+            case 2 -> editarProduto(scanner);
             default -> {
                 return;
             }
@@ -81,23 +78,18 @@ public class EstoqueService {
         String marca;
 
         try {
-            System.out.print("Nome do produto: ");
-             nome = scanner.next().trim();
+            nome = JOptionPane.showInputDialog("Nome do produto: ");
             Tratador.validarNomeProduto(nome);
-            System.out.print("Quantidade: ");
-              quantidadeStr = scanner.next().trim();
+            quantidadeStr = JOptionPane.showInputDialog("Quantidade: ");
             Tratador.validarQuantidade(quantidadeStr);
-            System.out.print("Preço: ");
-             precoStr = scanner.next().trim();
+            precoStr = JOptionPane.showInputDialog("Preço: ");
             Tratador.validarPreco(precoStr);
-            System.out.print("Categoria: ");
-             categoria = scanner.next().trim();
+            categoria = JOptionPane.showInputDialog("Categoria: ");
             Tratador.validarCategoria(categoria);
-            System.out.print("Marca: ");
-             marca = scanner.next().trim();
+            marca = JOptionPane.showInputDialog("Marca: ");
             Tratador.validarMarca(marca);
          } catch (IllegalArgumentException ex){
-               System.out.println("Erro: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
                return;
         }
             int quantidade = Integer.parseInt(quantidadeStr);
@@ -112,8 +104,7 @@ public class EstoqueService {
     }
 
     private void removerProduto(Scanner scanner) {
-        System.out.println("Informe o nome do produto a ser removido:");
-        String nome = scanner.nextLine();
+        String nome = JOptionPane.showInputDialog("Informe o nome do produto a ser removido:");
 
         // Lógica para remover o produto
         File arquivo = new File(STOCK_FILE);
@@ -148,8 +139,7 @@ public class EstoqueService {
     }
 
     private void editarProduto(Scanner scanner) {
-        System.out.println("Informe o nome do produto a ser editado:");
-        String nome = scanner.nextLine();
+        String nome = JOptionPane.showInputDialog("Informe o nome do produto a ser editado:");
 
         // Lógica para editar o produto
         File arquivo = new File(STOCK_FILE);
@@ -165,16 +155,12 @@ public class EstoqueService {
                 String[] partes = linha.split(",");
                 if (partes[0].equalsIgnoreCase(nome)) {
                     produtoEncontrado = true;
-                    System.out.println("Produto encontrado. Informe os novos dados:");
-                    System.out.println("Quantidade:");
-                    int quantidade = scanner.nextInt();
-                    System.out.println("Preço:");
-                    double preco = scanner.nextDouble();
-                    scanner.nextLine(); // Limpa o buffer de entrada
-					System.out.println("Categoria:");
-					String categoria = scanner.nextLine();
-					System.out.println("Marca:");
-					String marca = scanner.nextLine();
+                    JOptionPane.showMessageDialog(null, "Produto encontrado. Informe os novos dados.");
+
+                    String quantidade  = JOptionPane.showInputDialog("Quantidade: ");
+                    String preco = JOptionPane.showInputDialog("Preço: ");
+                    String categoria = JOptionPane.showInputDialog("Categoria: ");
+                    String marca = JOptionPane.showInputDialog("Marca: ");
                     
                     writer.write(nome + "," + quantidade + "," + preco + "," + categoria + "," + marca + "\n");
                 } else {

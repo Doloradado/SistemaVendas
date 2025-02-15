@@ -35,7 +35,6 @@ public class ComprarProduto {
     }
 
     public void visualizarEstoque() {
-        System.out.println("===== ESTOQUE DISPONÍVEL =====");
         try (BufferedReader reader = new BufferedReader(new FileReader(CAMINHO_ESTOQUE_TEMP))) { // Alterado para estoque_temp.txt
             String linha;
             boolean estoqueVazio = true;
@@ -58,8 +57,6 @@ public class ComprarProduto {
         List<String> linhasEstoque = new ArrayList<>();
         double totalCompra = 0; // Variável para acumular o total da compra
         boolean produtoEncontrado = false;
-
-        System.out.println("===== COMPRA DE PRODUTO =====");
         String nomeProduto = JOptionPane.showInputDialog("Digite seu nome: ");
         String quantidade = JOptionPane.showInputDialog("Digite sua senha: ");
 
